@@ -31,6 +31,7 @@ class Apriori
         void cFirstCandList(); //create first candidate list
 
         void fillStartingData(string file);
+        void displayEverthing();
 		Apriori();
 };
 template <typename T>
@@ -61,12 +62,11 @@ void Apriori<T>::fillStartingData(string file)
 		  inputFile.seekg(startingPosition,inputFile.beg);
 		  startingData.createArray(hello);
 		  string input;
-		  char random;
 		  for(int i = 0; i <= hello; i++){
 			inputFile >> input;
 			cout << endl << input << " " << i << "  \n";
 			startingData.setArrayData(i,stoi(input));
-			random  = inputFile.get(); // get the black space and new line characters
+			inputFile.get(); // get the black space and new line characters
 		  }
 		}//end of else statment
 	
@@ -136,6 +136,10 @@ void Apriori<T>::cFirstCandList()
         }
     }while(startingData++);
 }
-
+template <typename T>
+void Apriori<T>::displayEverthing()
+{
+    startingData.display();
+}
 
 #endif

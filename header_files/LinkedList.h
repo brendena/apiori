@@ -117,25 +117,6 @@ void LinkedList<T>::clear()  //doesn't work
 	mCount = 0;
 }
 
-template <class T>
-void LinkedList<T>::display()
-{
-	/*
-	Node<T>* ptrIterator = mHead;
-	if (isEmpty())
-	{
-		cout << "sorry nothing in here";
-	}
-	else
-	{
-		while (ptrIterator != NULL)
-		{
-			cout << ptrIterator->mData << "\n";
-			ptrIterator = ptrIterator->mNext;
-		}
-	}
-	*/
-}
 
 template <class T>
 T LinkedList<T>::operator[](int index)
@@ -157,21 +138,28 @@ Purpose: is to keep a position
 template <class T>
 bool LinkedList<T>::operator++(int value)
 {
+	
 	if(isEmpty())
 	{
+		cout << "empty \n";
 		return 0;
 	}
 	else
 	{
+		cout << "iterator value " << iterator->mData[0] << "\n"; 
 		iterator = iterator->mNext;
 	}
-	if(iterator == NULL){
+	if(iterator == NULL)
+	{
+		cout << "null\n";
 		return 0;
 	}
 	else
 	{
 		return 1;
 	}
+	
+	//return false;  this works
 }
 
 template <class T>
@@ -272,5 +260,20 @@ bool LinkedList<T>::search(int value)
 		ptr = ptr->mNext;
 	}
 	return false;
+}
+template <class T>
+void LinkedList<T>::display()
+{
+	Node<T>* ptr = mHead;
+	int sizeArray;
+	for (int i = 0; ptr != NULL; i++)
+	{
+		cout << "\n\n\nobjects number " << i;
+		for(int i = 0; i < ptr->mSize; i++)
+		{
+			cout << "data " << ptr->mData[i] << endl;
+		}
+		ptr = ptr->mNext;
+	}
 }
 #endif
