@@ -14,18 +14,22 @@ using namespace std;
 class Apriori
 {
     private:
-        LinkedList<int *> startingData;
-		//LinkedList<something> oldList;
-		//LinkedList<something> newList;
+        LinkedList<int> startingData;
+		LinkedList<int> oldList;
+		LinkedList<int> newList;
         int getDataFileCount(ifstream& inputFile);
     public:
+        //void findMinFrequ();
+        void cFirstCandList(); //create first candidate list
         void fillStartingData(string file);
 		Apriori();
 };
 
 Apriori::Apriori()
 {
-  
+  startingData = NULL;
+  oldList = NULL;
+  newList = NULL;
 }
 
 
@@ -98,4 +102,32 @@ int Apriori::getDataFileCount(ifstream& inputFile)
     }
     return count;
 }
+
+
+
+/*
+void Apriori::findMinFrequ()
+{
+    
+    
+}
+*/
+
+void Apriori::Apriori::cFirstCandList()
+{
+    
+    startingData.clearItterator();
+    do{
+        T* data = startingData.getItteratorValue();
+        for(int i = 0; i < startingData.getItteratorSize()+ 1; i++)
+        {
+            if(!startingData.search(data[i])) //not found
+            {
+                cFirstCandList.appendToTheEnd(data[i]);
+            }
+        }
+    }while(startingData++);
+}
+
+
 #endif

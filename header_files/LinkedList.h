@@ -10,21 +10,36 @@ template <class T>
 class LinkedList
 {
     private:
-        Node<T> *mHead, *mTail;
+        Node<T> *mHead, *mTail, *iterator;
         int     mCount;
     public:
+    
+    //getters
     	int  getCount();  //works
-    	T    getData(int index);  
+    	T    getData(int index);
+    	
+    //setters
     	void setData(int index, T data);
+    	void valuePlusPlus(int value);
 		void createArray(int size);
     	void setArrayData(int index, int data);
-
+    	
+ 	//utilities
     	void clear();
     	void display();
     	bool isEmpty();
-    	
+    	bool dealWithAddingValuesToBeginning(int value);
+    	void appendToTheEnd(int value);
+    	bool search(int value);
+    //dealing with iterator
+    	void clearIterator();
+		int getIteratorSize();
+		T* getIteratorValue();
+		
+    //operttor//constructors
     	T operator[](int index);
-		LinkedList(int coun);
+    	bool operator++();
+		LinkedList(int count);
     	LinkedList();
     	~LinkedList();
 };
@@ -34,6 +49,7 @@ LinkedList<T>::LinkedList()
 {
 	mHead = NULL;
 	mTail = NULL;
+	iterator = NULL;
 	mCount = 0;
 }
 
@@ -107,6 +123,7 @@ void LinkedList<T>::clear()  //doesn't work
 template <class T>
 void LinkedList<T>::display()
 {
+	/*
 	Node<T>* ptrIterator = mHead;
 	if (isEmpty())
 	{
@@ -120,7 +137,7 @@ void LinkedList<T>::display()
 			ptrIterator = ptrIterator->mNext;
 		}
 	}
-	
+	*/
 }
 
 template <class T>
@@ -134,12 +151,36 @@ T LinkedList<T>::operator[](int index)
 	return ptrIterator->mData;
 }
 
+
+/*
+pre:
+Post:
+Purpose: is to keep a position
+*/
+template <class T>
+bool LinkedList<T>::operator++()
+{
+	if(isEmpty())
+	{
+		return 0;
+	}
+	else
+	{
+		iterator = iterator->mNext;
+	}
+	if(iterator == NULL){
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
+}
+
 template <class T>
 bool LinkedList<T>::isEmpty()
 {
-	bool isEmpty = false;
-	if (mHead == NULL){ isEmpty = true; }
-	return isEmpty;
+	return mHead == NULL;
 }
 
 /*
@@ -152,29 +193,8 @@ We want the tail to be ready because where allways going to be adding onto the t
 template <class T>
 void LinkedList<T>::createArray(int size)
 {
-//*
-
-	if(mHead == NULL)
-	{
-		cout << "0\n";
-		mHead = new Node<T>();
-		mTail = mHead;
-	}
-	else if(mHead == mTail)
-	{
-		cout << "1\n";
-		mHead->mNext = new Node<T>();
-		mTail = mHead->mNext;
-	}
-	else
-	{
-		cout << "2\n";
-		mTail->mNext = new Node<T>();
-		mTail = mTail->mNext;	
-	}
-	mTail->mSize = size;
+	appendToTheEnd(size);
 	mTail->mData = new int[size+1];
-//*/
 }
 template <class T>
 void LinkedList<T>::setArrayData(int index, int data)
@@ -183,4 +203,101 @@ void LinkedList<T>::setArrayData(int index, int data)
 }
 
 
+template <class T>
+void LinkedList<T>::clearIterator()
+{
+	iterator = mHead;
+}
+
+template <class T>
+int LinkedList<T>::getIteratorSize()
+{
+	return iterator->mSize;	
+}
+
+template <class T>
+T* LinkedList<T>::getIteratorValue()
+{
+	return iterator->mData;
+}
+
+template <class T>
+void LinkedList<T>::valuePlusPlus(int value)
+{
+	if(!dealWithAddingValuesToBeginning(value))
+	{
+		//go through the entire thing looking for it
+		Node<T> *ptr = mHead;
+		bool notFound = true;
+		while(ptr != NULL && notFound)
+		{
+			if(ptr->mData[0] == value)
+			{
+				ptr->mData[0] = ptr->mData[0] + 1;
+			}
+		}
+		if(notFound)
+		{
+			appendToTheEnd(value);
+		}
+	}
+}
+/*
+pre: just a value
+post:  return a true if its been added else returns false
+purpose:  is to create the first 2 values of the linked list
+
+// might be a problem if the number come up twice first go////////
+*/
+template <class T>
+bool LinkedList<T>::dealWithAddingValuesToBeginning(int value)
+{
+	if(mHead == NULL)
+	{
+		mHead = new Node<T>(value);
+		mTail = mHead;
+		mCount++;
+		return true;
+	}
+	else if(mHead == mTail)
+	{
+		mHead->mNext = new Node<T>(value);
+		mTail = mHead->mNext;
+		mCount++;
+		return true;
+	}
+	return false;
+}
+
+template <class T>
+void LinkedList<T>::appendToTheEnd(T value)
+{
+	if(!dealWithAddingValuesToBeginning(value))
+	{
+			mTail->mNext = new Node<T>(value);
+			mTail = mTail->mNext;
+	}
+}
+
+template <class T>
+bool LinkedList<T>::search(int value)
+{
+	bool found = false;
+	if(mHead == NULL)
+	{
+		Node<T>*ptr = mHead;
+		int sizeArray;
+		do
+		{
+			for(int i = 0; i < ptr->mSize; i++)
+			{
+				if(value == ptr->mData[i])
+				{
+					found = true;
+				}
+			}
+		}while(ptr == NULL);
+	}
+	return found;
+}
 #endif
