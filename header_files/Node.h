@@ -20,7 +20,14 @@ struct Node
    //template <typename T>
    //friend bool operator<T>==(Node<T>& left, Node<T>& right); compare mData with other mData
    bool shittyOperatorComparison(Node<T>* right);
+   ~Node();
 };
+
+template <typename T>
+Node<T>::~Node()
+{
+    delete [] mData;
+}
 
 template <typename T>
 Node<T>::Node()
@@ -72,5 +79,7 @@ bool Node<T>::shittyOperatorComparison(Node<T>* right)
     }
     return true;
 }
+
+
 #endif
 

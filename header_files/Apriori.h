@@ -26,19 +26,37 @@ class Apriori
 		LinkedList<T> oldList;
 		LinkedList<T> newList;
         int getDataFileCount(ifstream& inputFile);
+        
+        int mFrequencyThreshold;  //s on the paper
+        
+        
+        //makes new item sets
+        void Apriori<T>::makeSets(LinkedList oldList, LinkedList newList);
+        Node<T>* Apriori<T>::makeNewNode(Node<T>* temp1, Node<T>* temp2);
+        bool Apriori<T>::isSame(Node<T>* temp1, Node<T>* temp2);
     public:
         //void findMinFrequ();
         void cFirstCandList(); //create first candidate list
-
         void fillStartingData(string file);
         void displayEverthing();
+        
+        void setFrequencyThreshold(float percentage);
+        void prune();
 		Apriori();
+		Apriori(int frequencyThreshold);
 };
 template <typename T>
 Apriori<T>::Apriori()
 {
-
+    mFrequencyThreshold = 5;
 }
+
+template <typename T>
+Apriori<T>::Apriori(int frequencyThreshold)
+{
+    mFrequencyThreshold = frequencyThreshold;
+}
+
 
 template <typename T>
 void Apriori<T>::fillStartingData(string file)
@@ -141,8 +159,99 @@ void Apriori<T>::cFirstCandList()
 template <typename T>
 void Apriori<T>::displayEverthing()
 {
-    //startingData.display();
+    startingData.display();
+    oldList.display();
     newList.display();
 }
+
+
+
+//adds new nodes to new list
+/*
+doesn't check for doob's but i don't think it needs to
+*/
+template <class T>
+void Apriori<T>::makeSets(LinkedList oldList, LinkedList newList)
+{
+    //copy newList to oldLink to free up newList for the new sets with overloaded operator
+    oldList = newList;
+    //clear newList
+    newList.clear();
+    
+    int setCount;
+    int nodeCount = 0;
+    Node<T>* temp1 = oldList.getHead();;
+    Node<T>* temp2 = temp1->mNext;
+    Node<T>* newListTemp = newList.getHead();
+   
+   //sets starting node and proceeding node to start traversal
+   while(temp2->mNext != NULL)
+   {
+        setCount = nodeCount;
+        //compares one node with all other nodes
+        while(setCount != oldList.getCount())
+        {
+            if(isSame(temp1, temp2))  //check to see if compatible
+            {
+                if(newList.getHead() == NULL)
+                    newList.getHead() = makeNewNode(temp1, temp2);
+                else
+                {
+                    newListTemp = newListTemp->mNext;
+                    newListTemp = makeNewNode(temp1, temp2);
+                }
+            }
+            setCount++;
+            temp2 = temp2->mNext;
+        }
+        nodeCount++;
+        
+        temp1 = temp1->mNext;
+        temp2 = temp1->mNext;
+   }
+}
+
+//adds data to the new node
+template <class T>
+Node<T> Apriori<T>::makeNewNode(Node<T>* temp1, Node<T>* temp2)
+{
+   Node<T>* newNode = new Node<T>;
+   newNode->mSize = size + 1;
+
+   for(int i = 0; i < size; i++)
+   {
+      newNode->mData[i] = temp1->mData[i];
+   }
+   newNode->mData[newNode->mSize - 1] = temp2->mData[temp2->mSize - 1];
+   
+}
+
+//checks to see if all elements in sets are the same except for last element
+template <class T>
+bool Apriori<T>::isSame(Node<T>* temp1, Node<T>* temp2)
+{
+   bool theSame = true;
+   
+   for(int i = 0; i < temp1->mSize; i++)
+   {
+      if(temp1->mData[i] != temp2->mData[i] && i < temp1->mSize - 1)
+         theSame = false;
+   }
+   
+   return theSame;
+}
+
+template <class T>
+void Apriori<T>::setFrequencyThreshold(float percentage)
+{
+    mFrequencyThreshold = (startingData.mCount * percentage) / 100;
+}
+template <class T>
+void Apriori<T>::prune()
+{
+    
+    
+}
+
 
 #endif

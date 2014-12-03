@@ -22,6 +22,7 @@ class LinkedList
     //getters
     	int  getCount();  //works
     	T    getData(int index);
+    	node<T>* getHead(){ return mHead;};
     	
     //setters
     	void setData(int index, T data);
@@ -35,6 +36,7 @@ class LinkedList
     	bool dealWithAddingValuesToBeginning(Node<T>* value);
     	void appendToTheEnd(Node<T>* value);
     	bool search(int value);
+    	void print();
     //dealing with iterator
     	void clearIterator();
 		int getIteratorSize();
@@ -43,8 +45,12 @@ class LinkedList
     //operttor//constructors
     	T operator[](int index);
     	bool operator++(int value); /************ added the int value and it compiled May not work *********************/
+    	
+    	LinkedList operator=(LinkedList other)
+    	
     	LinkedList();
     	~LinkedList();
+    	
 };
 
 template <class T>
@@ -59,7 +65,7 @@ LinkedList<T>::LinkedList()
 template <class T>
 LinkedList<T>::~LinkedList()
 {
-   // clear();
+   clear();
 }
 
 template <class T>
@@ -104,16 +110,19 @@ void LinkedList<T>::setData(int index, T data)  ///really bad implementation
 template <class T>
 void LinkedList<T>::clear()  //doesn't work
 {
-	Node<T>* ptrIterator = mHead->mNext;
-	while (ptrIterator != NULL) // get it down to the only value left is mHead
+	Node<T> *nodePtr = mHead;
+	while(nodePtr != NULL)
 	{
-		delete mHead;
-		mHead = ptrIterator;
-		ptrIterator = ptrIterator->mNext; 
+	  //garbage keeps track of node to be deleted
+	  Node<T> *garbage = nodePtr;
+	  //move on to the next node, if any
+	  nodePtr = nodePtr->mNext;
+	  delete garbage;
 	}
+	
 	delete mHead;
-	mHead = NULL;
-	mTail = NULL;
+	delete mTail;
+	mHead = mTail = NULL;
 	mCount = 0;
 }
 
@@ -279,4 +288,39 @@ void LinkedList<T>::display()
 		ptr = ptr->mNext;
 	}
 }
+/*
+pre:
+post: 
+purpose: to copy the linked list to another array
+*/
+template <class T>
+LinkedList LinkedList<T>::operator=(LinkedList other)
+{
+	clear();
+	
+	mHead = other.getHead();
+}
+
+
+/*
+don't we want the frequency count when we print out
+*/
+template <class T>
+LinkedList LinkedList<T>::print()
+{
+	ofstream myfile;
+	myfile.open ("output.txt");
+	Node<T>* ptr = mHead;
+	while(ptr != NULL)
+	{
+		for(int i = 0; i <= ptr->mSize; i++)
+		{
+			myfile << ptr->mData[i] << "  ";
+		}
+		myfile << "\n";
+		ptr = ptr->mNext;
+	}
+	
+}
+
 #endif
