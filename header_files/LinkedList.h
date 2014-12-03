@@ -247,10 +247,10 @@ template <class T>
 bool LinkedList<T>::search(int value)
 {
 	Node<T>* ptr = mHead;
-	int sizeArray;
-	while(ptr == NULL)
+
+	while(ptr != NULL)
 	{
-		for(int i = 0; i < ptr->mSize; i++)
+		for(int i = 0; i < ptr->mSize + 1; i++)
 		{
 			if(value == ptr->mData[i])
 			{
@@ -261,15 +261,18 @@ bool LinkedList<T>::search(int value)
 	}
 	return false;
 }
+
+
 template <class T>
 void LinkedList<T>::display()
 {
 	Node<T>* ptr = mHead;
 	int sizeArray;
+	cout << "\ndisplay\n";
 	for (int i = 0; ptr != NULL; i++)
 	{
 		cout << "\n\n\nobjects number " << i;
-		for(int i = 0; i < ptr->mSize; i++)
+		for(int i = 0; i <= ptr->mSize; i++)
 		{
 			cout << "data " << ptr->mData[i] << endl;
 		}

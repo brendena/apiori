@@ -126,12 +126,14 @@ void Apriori<T>::cFirstCandList()
     startingData.clearIterator();
     do{
         T* data = startingData.getIteratorValue();
-        for(int i = 0; i < startingData.getIteratorSize()+ 1; i++)
+        //cout << startingData.getIteratorSize() << endl << endl;
+        for(int i = 0; i < startingData.getIteratorSize() + 1; i++)
         {
-            if(!startingData.search(data[i])) //not found
+            cout << !startingData.search(1231) << "if its found \n";
+            if(!newList.search(data[i])) //not found
             {
-                Node<T>* newNode = new Node<T>(0, data[0]);
-                startingData.appendToTheEnd(newNode);
+                Node<T>* newNode = new Node<T>(0, data[i]);
+                newList.appendToTheEnd(newNode);
             }
         }
     }while(startingData++);
@@ -139,7 +141,8 @@ void Apriori<T>::cFirstCandList()
 template <typename T>
 void Apriori<T>::displayEverthing()
 {
-    startingData.display();
+    //startingData.display();
+    newList.display();
 }
 
 #endif
