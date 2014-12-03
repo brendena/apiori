@@ -79,7 +79,7 @@ void AssList::prune(AssList oldList)
 					{
 						subset[k] = currNode->mSet[k];
 					}				
-if(k > j)
+                        if(k > j)
 					{
 						subset[k] = currNode->mSet[k + 1];
 					}

@@ -1,3 +1,10 @@
+/*
+Error log
+
+So currently there a problem with getDataFileCount it doens't get the last line of data.  It someithng with testing for the -1 part
+
+*/
+
 #ifndef APRIORI
 #define APRIORI
 
@@ -11,29 +18,29 @@
 
 using namespace std;
 
+template <typename T>
 class Apriori
 {
     private:
-        LinkedList<int> startingData;
-		LinkedList<int> oldList;
-		LinkedList<int> newList;
+        LinkedList<T> startingData;
+		LinkedList<T> oldList;
+		LinkedList<T> newList;
         int getDataFileCount(ifstream& inputFile);
     public:
         //void findMinFrequ();
-        template <typename T>
         void cFirstCandList(); //create first candidate list
 
         void fillStartingData(string file);
 		Apriori();
 };
-
-Apriori::Apriori()
+template <typename T>
+Apriori<T>::Apriori()
 {
 
 }
 
-
-void Apriori::fillStartingData(string file)
+template <typename T>
+void Apriori<T>::fillStartingData(string file)
 {
     ifstream inputFile;
     inputFile.open("testdata.txt");
@@ -47,8 +54,8 @@ void Apriori::fillStartingData(string file)
         hello = getDataFileCount(inputFile);
         cout << hello << "\n";
 		if(hello == -1){
-			cout << "hello \n";
-		  break;
+    		cout << "hello \n";
+    		break;
 		}
 		else{
 		  inputFile.seekg(startingPosition,inputFile.beg);
@@ -74,8 +81,8 @@ post: return the number of items per line
 1 item = return of 0
 purpose: is to get the total amount of items so we can make a static array
  */
-
-int Apriori::getDataFileCount(ifstream& inputFile)
+template <typename T>
+int Apriori<T>::getDataFileCount(ifstream& inputFile)
 {
     int count;
     char check = 0;
@@ -113,7 +120,7 @@ void Apriori::findMinFrequ()
 }
 */
 template <typename T>
-void Apriori::cFirstCandList()
+void Apriori<T>::cFirstCandList()
 {
     
     startingData.clearIterator();
@@ -123,7 +130,7 @@ void Apriori::cFirstCandList()
         {
             if(!startingData.search(data[i])) //not found
             {
-                Node<T>* newNode = new Node<T>(0, data);
+                Node<T>* newNode = new Node<T>(0, data[0]);
                 startingData.appendToTheEnd(newNode);
             }
         }

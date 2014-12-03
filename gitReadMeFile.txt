@@ -1,3 +1,6 @@
+git add .
+//add all the documents to the git repo
+
 git commit -m "type the changes you've made to the document"
 //commiting local changes and adding a message
 

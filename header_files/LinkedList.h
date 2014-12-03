@@ -1,6 +1,7 @@
 /*
 errorlog
 possible error with bool Operator++
+
 */
 #ifndef LINKED_LIST
 #define LINKED_LIST
@@ -268,6 +269,7 @@ bool LinkedList<T>::search(int value)
 				return true;
 			}
 		}
+		ptr = ptr->mNext;
 	}
 	return false;
 }
