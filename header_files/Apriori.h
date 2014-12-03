@@ -20,16 +20,16 @@ class Apriori
         int getDataFileCount(ifstream& inputFile);
     public:
         //void findMinFrequ();
+        template <typename T>
         void cFirstCandList(); //create first candidate list
+
         void fillStartingData(string file);
 		Apriori();
 };
 
 Apriori::Apriori()
 {
-  startingData = NULL;
-  oldList = NULL;
-  newList = NULL;
+
 }
 
 
@@ -78,7 +78,7 @@ purpose: is to get the total amount of items so we can make a static array
 int Apriori::getDataFileCount(ifstream& inputFile)
 {
     int count;
-    char check = NULL;
+    char check = 0;
     string junk;
     if(inputFile.eof())
     {
@@ -112,18 +112,19 @@ void Apriori::findMinFrequ()
     
 }
 */
-
-void Apriori::Apriori::cFirstCandList()
+template <typename T>
+void Apriori::cFirstCandList()
 {
     
-    startingData.clearItterator();
+    startingData.clearIterator();
     do{
-        T* data = startingData.getItteratorValue();
-        for(int i = 0; i < startingData.getItteratorSize()+ 1; i++)
+        T* data = startingData.getIteratorValue();
+        for(int i = 0; i < startingData.getIteratorSize()+ 1; i++)
         {
             if(!startingData.search(data[i])) //not found
             {
-                cFirstCandList.appendToTheEnd(data[i]);
+                Node<T>* newNode = new Node<T>(0, data);
+                startingData.appendToTheEnd(newNode);
             }
         }
     }while(startingData++);

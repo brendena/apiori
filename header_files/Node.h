@@ -9,12 +9,13 @@ template <typename T>
 struct Node
 {
    T*  mData; //going to a thing
-   int mSize;  // 0 size is one array uptop
+   int mSize;  // no aaaaaaaaaaaaaaaaaaa
    
    Node<T> *mNext;
 
    Node();
-   Node(T data);
+   Node(int size);
+   Node(int size, T data);
    
    //template <typename T>
    //friend bool operator<T>==(Node<T>& left, Node<T>& right); compare mData with other mData
@@ -29,12 +30,30 @@ Node<T>::Node()
 }
 
 template <typename T>
-Node<T>::Node(T data)
+Node<T>::Node(int size)
 {
-	int mSize = data;
-	mData = NULL;
+	mSize = size;
+	mData = new T[size+1];
 	mNext = NULL;	
 }
+template <typename T>
+Node<T>::Node(int size, T value)
+{
+    mSize = size;
+    mData = new T[size + 1];
+    mData[0] = value;
+    mNext = NULL;
+}
+/*
+template <typename T>
+Node<T>::Node(T size, T* value)
+{
+    for(int i = 0; i <= size; i++)
+    {
+        
+    }
+}
+*/
 /*
 template <typename T>
 bool operator==(Node<T>& left, Node<T>& right)

@@ -7,8 +7,8 @@ int main()
     cout << "program started \n\n";
     
     Apriori test;
-    test.fillStartingData(fileDestination);
+    test.fillStartingData("testdata.txt");
 
-    cout << "\n\nprogram ended \n\n";
+    cout << "\n\nprogram ended  fixed \n\n";
     return 0;
 }

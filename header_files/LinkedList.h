@@ -1,3 +1,7 @@
+/*
+errorlog
+possible error with bool Operator++
+*/
 #ifndef LINKED_LIST
 #define LINKED_LIST
 
@@ -20,7 +24,6 @@ class LinkedList
     	
     //setters
     	void setData(int index, T data);
-    	void valuePlusPlus(int value);
 		void createArray(int size);
     	void setArrayData(int index, int data);
     	
@@ -28,8 +31,8 @@ class LinkedList
     	void clear();
     	void display();
     	bool isEmpty();
-    	bool dealWithAddingValuesToBeginning(int value);
-    	void appendToTheEnd(int value);
+    	bool dealWithAddingValuesToBeginning(Node<T>* value);
+    	void appendToTheEnd(Node<T>* value);
     	bool search(int value);
     //dealing with iterator
     	void clearIterator();
@@ -38,8 +41,7 @@ class LinkedList
 		
     //operttor//constructors
     	T operator[](int index);
-    	bool operator++();
-		LinkedList(int count);
+    	bool operator++(int value); /************ added the int value and it compiled May not work *********************/
     	LinkedList();
     	~LinkedList();
 };
@@ -51,12 +53,6 @@ LinkedList<T>::LinkedList()
 	mTail = NULL;
 	iterator = NULL;
 	mCount = 0;
-}
-
-template <class T>
-LinkedList<T>::LinkedList(int count)
-{
-	mCount = count;
 }
 
 template <class T>
@@ -158,7 +154,7 @@ Post:
 Purpose: is to keep a position
 */
 template <class T>
-bool LinkedList<T>::operator++()
+bool LinkedList<T>::operator++(int value)
 {
 	if(isEmpty())
 	{
@@ -193,8 +189,8 @@ We want the tail to be ready because where allways going to be adding onto the t
 template <class T>
 void LinkedList<T>::createArray(int size)
 {
-	appendToTheEnd(size);
-	mTail->mData = new int[size+1];
+	Node<T>* newNode = new Node<T>(size);
+	appendToTheEnd(newNode);
 }
 template <class T>
 void LinkedList<T>::setArrayData(int index, int data)
@@ -221,27 +217,6 @@ T* LinkedList<T>::getIteratorValue()
 	return iterator->mData;
 }
 
-template <class T>
-void LinkedList<T>::valuePlusPlus(int value)
-{
-	if(!dealWithAddingValuesToBeginning(value))
-	{
-		//go through the entire thing looking for it
-		Node<T> *ptr = mHead;
-		bool notFound = true;
-		while(ptr != NULL && notFound)
-		{
-			if(ptr->mData[0] == value)
-			{
-				ptr->mData[0] = ptr->mData[0] + 1;
-			}
-		}
-		if(notFound)
-		{
-			appendToTheEnd(value);
-		}
-	}
-}
 /*
 pre: just a value
 post:  return a true if its been added else returns false
@@ -250,18 +225,18 @@ purpose:  is to create the first 2 values of the linked list
 // might be a problem if the number come up twice first go////////
 */
 template <class T>
-bool LinkedList<T>::dealWithAddingValuesToBeginning(int value)
+bool LinkedList<T>::dealWithAddingValuesToBeginning(Node<T>* value)
 {
 	if(mHead == NULL)
 	{
-		mHead = new Node<T>(value);
+		mHead = value;
 		mTail = mHead;
 		mCount++;
 		return true;
 	}
 	else if(mHead == mTail)
 	{
-		mHead->mNext = new Node<T>(value);
+		mHead->mNext = value;
 		mTail = mHead->mNext;
 		mCount++;
 		return true;
@@ -270,34 +245,30 @@ bool LinkedList<T>::dealWithAddingValuesToBeginning(int value)
 }
 
 template <class T>
-void LinkedList<T>::appendToTheEnd(T value)
+void LinkedList<T>::appendToTheEnd(Node<T>* value)
 {
 	if(!dealWithAddingValuesToBeginning(value))
 	{
-			mTail->mNext = new Node<T>(value);
-			mTail = mTail->mNext;
+		mTail->mNext = value;
+		mTail = mTail->mNext;
 	}
 }
 
 template <class T>
 bool LinkedList<T>::search(int value)
 {
-	bool found = false;
-	if(mHead == NULL)
+	Node<T>* ptr = mHead;
+	int sizeArray;
+	while(ptr == NULL)
 	{
-		Node<T>*ptr = mHead;
-		int sizeArray;
-		do
+		for(int i = 0; i < ptr->mSize; i++)
 		{
-			for(int i = 0; i < ptr->mSize; i++)
+			if(value == ptr->mData[i])
 			{
-				if(value == ptr->mData[i])
-				{
-					found = true;
-				}
+				return true;
 			}
-		}while(ptr == NULL);
+		}
 	}
-	return found;
+	return false;
 }
 #endif
