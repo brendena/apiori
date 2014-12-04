@@ -40,7 +40,7 @@ class LinkedList
     	bool search(T value);
     	void print();
     	bool searchForNode(Node<T>*  bob);
-
+		void deleteByIndex(int index);
     	
     //dealing with iterator
     	void clearIterator();
@@ -91,7 +91,7 @@ T LinkedList<T>::getData(int index)
 }
 
 template <class T>
-void LinkedList<T>::setData(int index, T data)  ///really bad implementation
+void LinkedList<T>::setData(int index, T data)  ///doesn't work
 {
 	if (mCount < index)
 	{ 
@@ -101,6 +101,7 @@ void LinkedList<T>::setData(int index, T data)  ///really bad implementation
 	{
 		mHead = new Node<T>(data);
 		mTail = mHead;
+		mCount++;
 	}
 	else{
 		Node<T>* tmp = mHead;
@@ -155,17 +156,14 @@ bool LinkedList<T>::operator++(int value)
 	
 	if(isEmpty())
 	{
-		cout << "empty \n";
 		return 0;
 	}
 	else
 	{
-		cout << "iterator value " << iterator->mData[0] << "\n"; 
 		iterator = iterator->mNext;
 	}
 	if(iterator == NULL)
 	{
-		cout << "null\n";
 		return 0;
 	}
 	else
@@ -254,6 +252,7 @@ void LinkedList<T>::appendToTheEnd(Node<T>* value)
 	{
 		mTail->mNext = value;
 		mTail = mTail->mNext;
+		mCount++;
 	}
 }
 /*
@@ -327,6 +326,8 @@ LinkedList<T> LinkedList<T>::operator=(LinkedList other)
 
 /*
 don't we want the frequency count when we print out
+
+leave a extra \n at the end of the print output.txt
 */
 template <class T>
 void LinkedList<T>::print()
@@ -336,14 +337,58 @@ void LinkedList<T>::print()
 	Node<T>* ptr = mHead;
 	while(ptr != NULL)
 	{
-		for(int i = 0; i < ptr->mSize; i++)
+		myfile << ptr->mData[0]; //put here so there not a unwanted " " if there no data there
+		for(int i = 1; i < ptr->mSize; i++)
 		{
-			myfile << ptr->mData[i] << "  ";
+			myfile << "  " << ptr->mData[i];
 		}
 		myfile << "\n";
 		ptr = ptr->mNext;
 	}
 	
+}
+template <class T>
+void LinkedList<T>::setHead(Node<T>* joe)
+{
+	mHead = joe;
+	
+}
+
+template <class T>
+void LinkedList<T>::deleteByIndex(int index)
+{
+	Node<T>* ptr;
+	if(index >= mCount) //index greater then count
+	{
+		cout << "when't over bounds\n";	
+	}
+	else if(index == 0)
+	{
+		ptr = mHead->mNext;
+		delete mHead;
+		mHead = ptr;
+		mCount--;
+	}
+	else
+	{
+		ptr = mHead;
+		for(int i = 0; i < index - 1; i++) //interate through until element before index
+		{
+			ptr = ptr->mNext;
+		}
+		Node<T>* deleteJunkNode = ptr->mNext;
+		if(index == mCount -1) //is the tail
+		{
+			ptr->mNext = NULL;
+			mTail = ptr;
+		}
+		else
+		{
+			ptr->mNext = deleteJunkNode->mNext;
+		}
+		delete deleteJunkNode;
+		mCount--;
+	}
 }
 
 #endif

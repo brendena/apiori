@@ -18,7 +18,7 @@ struct Node
    Node();
    Node(int size);
    Node(int size, T data);
-   Node(int size, T* data);
+   Node(int size, T* data, int ass);
    ~Node();
    
    //template <typename T>
@@ -47,6 +47,7 @@ Node<T>::Node(int size)
 	mData = new T[size+1];
 	mNext = NULL;	
 }
+
 template <typename T>
 Node<T>::Node(int size, T value)
 {
@@ -56,7 +57,7 @@ Node<T>::Node(int size, T value)
     mNext = NULL;
 }
 template <typename T>
-Node<T>::Node(int size, T* value) //going to point  the same information
+Node<T>::Node(int size, T* value, int ass) //going to point  the same information
 {
     mData = value;
     mSize = size;

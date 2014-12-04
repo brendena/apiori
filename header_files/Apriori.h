@@ -22,36 +22,55 @@ template <typename T>
 class Apriori
 {
     private:
+    //members
         LinkedList<T> startingData;
 		LinkedList<T> oldList;
 		LinkedList<T> newList;
-        int getDataFileCount(ifstream& inputFile);
-        
         int mFrequencyThreshold;  //s on the paper
         int mCountTransactions;
+    //end of members   
+        int getDataFileCount(ifstream& inputFile);
+    //makes new item sets
         
-        //makes new item sets
-        void makeSets();
         Node<T>* makeNewNode(Node<T>* temp1, Node<T>* temp2);
         bool isSame(Node<T>* temp1, Node<T>* temp2);
+    //end of make new Ste
     public:
-        //void findMinFrequ();
+    //for the first time
         void cFirstCandList(); //create first candidate list
         void fillStartingData(string file);
-        void displayEverthing();
+        void firstPrune();
         
+        
+        
+        
+    //setters
         void setFrequencyThreshold(float percentage);
         void setCountTransactions(int count);
+        
+    //utilites
         void prune();
+		bool checkForItemsFrequency(Node<T>* set);// if its larger then frequency threshold its good
+		void displayEverthing();
+		void print();
+		void makeSets();
+	//constructors
 		Apriori();
 		Apriori(int frequencyThreshold);
+		~Apriori();
 };
 template <typename T>
 Apriori<T>::Apriori()
 {
     mFrequencyThreshold = 5;
 }
-
+template <typename T>
+Apriori<T>::~Apriori()
+{
+    startingData.clear();
+    oldList.clear();
+    newList.clear();
+}
 template <typename T>
 Apriori<T>::Apriori(int frequencyThreshold)
 {
@@ -74,14 +93,14 @@ void Apriori<T>::fillStartingData(string file)
     {
         startingPosition = inputFile.tellg(); //tellg get the position of the file input
         itemsInTransactions = getDataFileCount(inputFile);
-        if(itemsInTransactions == -1){ // error saying didn't take in any numbers
+        if(itemsInTransactions == - 1){ // error saying didn't take in any numbers
     		cout << "error error \n"
     		     << "broke with less then wanted number of transaction \n" 
     		     << "endded with "  << numberOfTransactions << "\n\n\n"  ;
     		break;
         }
-	else
-	{
+    	else
+    	{
             inputFile.seekg(startingPosition,inputFile.beg);
             startingData.createArray(itemsInTransactions);
             string junk;
@@ -91,13 +110,12 @@ void Apriori<T>::fillStartingData(string file)
     			inputFile >> junk; //gettint the transactional number
     			inputFile.get(); //getting the space
     			inputFile >> input; //gets the input number
-			inputFile.get();// gets the newline character
-    			cout << endl << input << " " << i << "  \n";
+			    inputFile.get();// gets the newline character
+                //cout << endl << input << " " << i << "  \n";
     			startingData.setArrayData(i,stoi(input));
-	     }
-	     
-	 }
-	numberOfTransactions++;
+	        }
+    	}
+    numberOfTransactions++;
     }
     cout << "\n its done \n";
     inputFile.close();
@@ -123,7 +141,6 @@ int Apriori<T>::getDataFileCount(ifstream& inputFile)
         string getLineString;
         getline(inputFile, getLineString);
         char transactionNumber = getLineString[0];
-        cout << "transactionNumber << " << transactionNumber << endl;  
         do
         {
             count++; // it add plus plus for the item before this
@@ -133,15 +150,6 @@ int Apriori<T>::getDataFileCount(ifstream& inputFile)
     return count;
 }
 
-
-
-/*
-void Apriori::findMinFrequ()
-{
-    
-    
-}
-*/
 
 /*
 have not tested with search works
@@ -153,12 +161,10 @@ void Apriori<T>::cFirstCandList()
     startingData.clearIterator();
     do{
         T* data = startingData.getIteratorValue();
-        //cout << startingData.getIteratorSize() << endl << endl;
         for(int i = 0; i < startingData.getIteratorSize(); i++)
         {
             if(!newList.search(data[i])) //not found
             {
-                cout << "this is data" << data[i] << endl;
                 Node<T>* newNode = new Node<T>(1, data[i]);
                 newList.appendToTheEnd(newNode);
             }
@@ -187,15 +193,15 @@ void Apriori<T>::makeSets() //uses the new and old linked list
     //clear newList
     newList.clear();
     
-    int setCount;
-    int nodeCount = 0;
-    Node<T>* temp1 = oldList.getHead();;
-    Node<T>* temp2 = temp1->mNext;
-    Node<T>* newListTemp = newList.getHead();
+    int setCount; // one after the node your on
+    int nodeCount = 0; //keeps track of node your on
+    Node<T>* temp1 = oldList.getHead();
+    Node<T>* temp2 = temp1;
    
    //sets starting node and proceeding node to start traversal
    while(temp2->mNext != NULL)
    {
+        temp2 = temp1->mNext;
         setCount = nodeCount;
         //compares one node with all other nodes
         while(setCount != oldList.getCount())
@@ -203,20 +209,17 @@ void Apriori<T>::makeSets() //uses the new and old linked list
             if(isSame(temp1, temp2))  //check to see if compatible
             {
                 if(newList.getHead() == NULL)
-                    newList.getHead() = makeNewNode(temp1, temp2);
+                    newList.setHead(makeNewNode(temp1, temp2));
                 else
                 {
-                    newListTemp = newListTemp->mNext;
-                    newListTemp = makeNewNode(temp1, temp2);
+                    newList.appendToTheEnd(makeNewNode(temp1, temp2));
                 }
             }
             setCount++;
             temp2 = temp2->mNext;
         }
         nodeCount++;
-        
         temp1 = temp1->mNext;
-        temp2 = temp1->mNext;
    }
 }
 
@@ -225,7 +228,7 @@ template <class T>
 Node<T>* Apriori<T>::makeNewNode(Node<T>* temp1, Node<T>* temp2)
 {
    Node<T>* newNode = new Node<T>;
-   newNode->mSize = newNode->size + 1;
+   newNode->mSize = newNode->mSize + 1;
 
    for(int i = 0; i < temp1->mSize; i++)
    {
@@ -284,8 +287,8 @@ void Apriori<T>::prune()
 						subset[k] = currNode->mData[k + 1];
 					}
 				} //end of for K < currNode->size
-				Node<T>* subsetNode = new Node<T>(subset->mSize,subset);
-				if(!oldList.searchForNode(currNode->mSize - 1, subsetNode)) //checkListForNode?
+				Node<T>* subsetNode = new Node<T>(currNode->mSize - 1,subset, 0);
+				if(!oldList.searchForNode(subsetNode)) //checkListForNode?
 				{
 					Node<T>* tmp = currNode;
 					currNode = currNode->mNext;
@@ -297,9 +300,69 @@ void Apriori<T>::prune()
     		} // end of for J < CurrNode->mSize
     	} //end of I < old.mCount
     	lastNode = currNode;
-    	currNode = currNode->mNext;;
+    	currNode = currNode->mNext;
 	}//end of the while(cNode != NULL)
 }
 
+template <class T>
+void Apriori<T>::firstPrune()
+{
+    Node<T>* currNode = newList.getHead();
+	Node<T>* lastNode;  //previous node
+    for(int i = 0; currNode != NULL; i++ )
+    {
+        if(!checkForItemsFrequency(currNode)) // if it doesn't meet the minume frequency then delete
+        {
+            cout <<"\nthis i " << i<< "  currNode\n " << currNode->mData[0] << endl;
+            newList.deleteByIndex(i);
+            i--;
+        }
+        currNode = currNode->mNext;
+    }
+}
 
+/*
+pre:linked list must have data
+post: its going to return true if it passes the min frequency threshold else false
+purpose: check the frequency and delete it if its to low.
+*/
+template <class T>
+bool Apriori<T>::checkForItemsFrequency(Node<T>* set)
+{
+    startingData.clearIterator();
+    bool found;
+    int count = 0;
+    do
+    {
+        T* iterData = startingData.getIteratorValue();
+        for(int i = 0; i < set->mSize; i++) //checking set
+        {
+            found = false;
+            for(int j = 0; j < startingData.getIteratorSize(); j++) //overall data
+            {
+                if(set->mData[i] == iterData[j])
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if(!found) break;
+            if(i == set->mSize - 1) count++; //so if it found it for all of mSize then all the values been found
+        }
+    }while(startingData++);
+    
+    if(count >= mFrequencyThreshold)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+template <class T>
+void Apriori<T>::print()
+{
+    newList.print();
+}
 #endif
