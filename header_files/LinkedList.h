@@ -259,7 +259,7 @@ bool LinkedList<T>::search(int value)
 
 	while(ptr != NULL)
 	{
-		for(int i = 0; i < ptr->mSize + 1; i++)
+		for(int i = 0; i < ptr->mSize; i++)
 		{
 			if(value == ptr->mData[i])
 			{
@@ -280,8 +280,8 @@ void LinkedList<T>::display()
 	cout << "\ndisplay\n";
 	for (int i = 0; ptr != NULL; i++)
 	{
-		cout << "\n\n\nobjects number " << i;
-		for(int i = 0; i <= ptr->mSize; i++)
+		cout << "\n\n\nobjects number " << i << endl;
+		for(int i = 0; i < ptr->mSize; i++)
 		{
 			cout << "data " << ptr->mData[i] << endl;
 		}
@@ -313,7 +313,7 @@ void LinkedList<T>::print()
 	Node<T>* ptr = mHead;
 	while(ptr != NULL)
 	{
-		for(int i = 0; i <= ptr->mSize; i++)
+		for(int i = 0; i < ptr->mSize; i++)
 		{
 			myfile << ptr->mData[i] << "  ";
 		}

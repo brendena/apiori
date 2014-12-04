@@ -58,95 +58,77 @@ Apriori<T>::Apriori(int frequencyThreshold)
     mFrequencyThreshold = frequencyThreshold;
 }
 
-
+/*
+it shoots one to many
+*/
 template <typename T>
 void Apriori<T>::fillStartingData(string file)
 {
     ifstream inputFile;
     inputFile.open("testdata.txt");
-    int hello;
+    int itemsInTransactions = 0; //number of items bought per transaction
     int startingPosition;
-    
-        /*
-        http://mathbits.com/MathBits/CompSci/APstrings/APgetline.htm/
-        
-        good website to figure out getline  cin >> asdfasdf*/
-    /*
-    do
+    int numberOfTransactions = 0; //total amount of transactions
+  
+    while(numberOfTransactions <= mCountTransactions && !inputFile.eof() && itemsInTransactions != -1)
     {
-        
         startingPosition = inputFile.tellg(); //tellg get the position of the file input
-
-        hello = getDataFileCount(inputFile);
-        cout << hello << "\n";
-		if(hello == -1){
-    		cout << "hello \n";
+        itemsInTransactions = getDataFileCount(inputFile);
+        if(itemsInTransactions == -1){ // error saying didn't take in any numbers
+    		cout << "error error \n"
+    		     << "broke with less then wanted number of transaction \n" 
+    		     << "endded with "  << numberOfTransactions << "\n\n\n"  ;
     		break;
-		}
-		else{
-		  inputFile.seekg(startingPosition,inputFile.beg);
-		  startingData.createArray(hello);
-		  string input;
-		  for(int i = 0; i <= hello; i++){
-			inputFile >> input;
-			cout << endl << input << " " << i << "  \n";
-			startingData.setArrayData(i,stoi(input));
-			inputFile.get(); // get the black space and new line characters
-		  }
-		}//end of else statment
-	    
-    }while()(hello != -1 && !inputFile.eof());
-    */
-    getDataFileCount(inputFile);
+        }
+	else
+	{
+            inputFile.seekg(startingPosition,inputFile.beg);
+            startingData.createArray(itemsInTransactions);
+            string junk;
+            string input;
+            for(int i = 0; i < itemsInTransactions; i++)
+            {
+    			inputFile >> junk; //gettint the transactional number
+    			inputFile.get(); //getting the space
+    			inputFile >> input; //gets the input number
+			inputFile.get();// gets the newline character
+    			cout << endl << input << " " << i << "  \n";
+    			startingData.setArrayData(i,stoi(input));
+	     }
+	     
+	 }
+	numberOfTransactions++;
+    }
+    cout << "\n its done \n";
     inputFile.close();
 }
 
 /*
 pre:
 post: return the number of items per line
-1 item = return of 0
+1 item = return of 1
 purpose: is to get the total amount of items so we can make a static array
  */
 template <typename T>
 int Apriori<T>::getDataFileCount(ifstream& inputFile)
 {
-    int count;
-    char check = 0;
-    string junk;
+    int count = 0;
+    
     if(inputFile.eof())
     {
         count = -1;
     }
-    
-    
-    
-    
-    
-    /*
     else
     {
-        for(count = 0 ;check != newLine && !inputFile.eof();)
+        string getLineString;
+        getline(inputFile, getLineString);
+        char transactionNumber = getLineString[0];
+        cout << "transactionNumber << " << transactionNumber << endl;  
+        do
         {
-            inputFile >> junk;
-            check = inputFile.get();
-            if(check == blankSpace)
-            {
-                count++;
-            }
-			if((int)check == -1){
-			  count = -1;
-			  break;
-			}
-        }
-    }
-    */
-    else
-    {
-        getline(inputFile, junk);
-        for(count = 0; count < 5; count++)
-        {
-            cout << junk[count] << endl;
-        }
+            count++; // it add plus plus for the item before this
+            getline(inputFile, getLineString);
+        }while(transactionNumber == getLineString[0]); //so ifthe transaction number don't match
     }
     return count;
 }
@@ -168,12 +150,12 @@ void Apriori<T>::cFirstCandList()
     do{
         T* data = startingData.getIteratorValue();
         //cout << startingData.getIteratorSize() << endl << endl;
-        for(int i = 0; i < startingData.getIteratorSize() + 1; i++)
+        for(int i = 0; i < startingData.getIteratorSize(); i++)
         {
-            cout << !startingData.search(1231) << "if its found \n";
             if(!newList.search(data[i])) //not found
             {
-                Node<T>* newNode = new Node<T>(0, data[i]);
+                cout << "this is data" << data[i] << endl;
+                Node<T>* newNode = new Node<T>(1, data[i]);
                 newList.appendToTheEnd(newNode);
             }
         }
@@ -182,9 +164,9 @@ void Apriori<T>::cFirstCandList()
 template <typename T>
 void Apriori<T>::displayEverthing()
 {
-    startingData.display();
+    //startingData.display();
     //oldList.display();
-    //newList.display();
+    newList.display();
 }
 
 

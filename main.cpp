@@ -11,8 +11,8 @@ int main()
     cout << "program started \n\n";
     
     Apriori<int> test;
+    test.setCountTransactions(4);// probably should make a constructor for all this data.
     test.fillStartingData("testdata.txt");  
-    test.setCountTransactions(20);
     test.setFrequencyThreshold(precentage[percentageNum]);
 
     test.cFirstCandList();
