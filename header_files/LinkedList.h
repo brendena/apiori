@@ -22,7 +22,7 @@ class LinkedList
     //getters
     	int  getCount();  //works
     	T    getData(int index);
-    	node<T>* getHead(){ return mHead;};
+    	Node<T>* getHead(){ return mHead;};
     	
     //setters
     	void setData(int index, T data);
@@ -46,7 +46,7 @@ class LinkedList
     	T operator[](int index);
     	bool operator++(int value); /************ added the int value and it compiled May not work *********************/
     	
-    	LinkedList operator=(LinkedList other)
+    	LinkedList<T> operator=(LinkedList<T> other);
     	
     	LinkedList();
     	~LinkedList();
@@ -294,7 +294,7 @@ post:
 purpose: to copy the linked list to another array
 */
 template <class T>
-LinkedList LinkedList<T>::operator=(LinkedList other)
+LinkedList<T> LinkedList<T>::operator=(LinkedList other)
 {
 	clear();
 	
@@ -306,7 +306,7 @@ LinkedList LinkedList<T>::operator=(LinkedList other)
 don't we want the frequency count when we print out
 */
 template <class T>
-LinkedList LinkedList<T>::print()
+void LinkedList<T>::print()
 {
 	ofstream myfile;
 	myfile.open ("output.txt");

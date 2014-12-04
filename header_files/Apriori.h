@@ -28,12 +28,12 @@ class Apriori
         int getDataFileCount(ifstream& inputFile);
         
         int mFrequencyThreshold;  //s on the paper
-        
+        int mCountTransactions;
         
         //makes new item sets
-        void Apriori<T>::makeSets(LinkedList oldList, LinkedList newList);
-        Node<T>* Apriori<T>::makeNewNode(Node<T>* temp1, Node<T>* temp2);
-        bool Apriori<T>::isSame(Node<T>* temp1, Node<T>* temp2);
+        void makeSets();
+        Node<T>* makeNewNode(Node<T>* temp1, Node<T>* temp2);
+        bool isSame(Node<T>* temp1, Node<T>* temp2);
     public:
         //void findMinFrequ();
         void cFirstCandList(); //create first candidate list
@@ -41,6 +41,7 @@ class Apriori
         void displayEverthing();
         
         void setFrequencyThreshold(float percentage);
+        void setCountTransactions(int count);
         void prune();
 		Apriori();
 		Apriori(int frequencyThreshold);
@@ -65,9 +66,15 @@ void Apriori<T>::fillStartingData(string file)
     inputFile.open("testdata.txt");
     int hello;
     int startingPosition;
+    
+        /*
+        http://mathbits.com/MathBits/CompSci/APstrings/APgetline.htm/
+        
+        good website to figure out getline  cin >> asdfasdf*/
+    /*
     do
     {
-
+        
         startingPosition = inputFile.tellg(); //tellg get the position of the file input
 
         hello = getDataFileCount(inputFile);
@@ -87,9 +94,10 @@ void Apriori<T>::fillStartingData(string file)
 			inputFile.get(); // get the black space and new line characters
 		  }
 		}//end of else statment
-	
-    }while(hello != -1 && !inputFile.eof());
-
+	    
+    }while()(hello != -1 && !inputFile.eof());
+    */
+    getDataFileCount(inputFile);
     inputFile.close();
 }
 
@@ -109,6 +117,12 @@ int Apriori<T>::getDataFileCount(ifstream& inputFile)
     {
         count = -1;
     }
+    
+    
+    
+    
+    
+    /*
     else
     {
         for(count = 0 ;check != newLine && !inputFile.eof();)
@@ -123,6 +137,15 @@ int Apriori<T>::getDataFileCount(ifstream& inputFile)
 			  count = -1;
 			  break;
 			}
+        }
+    }
+    */
+    else
+    {
+        getline(inputFile, junk);
+        for(count = 0; count < 5; count++)
+        {
+            cout << junk[count] << endl;
         }
     }
     return count;
@@ -160,8 +183,8 @@ template <typename T>
 void Apriori<T>::displayEverthing()
 {
     startingData.display();
-    oldList.display();
-    newList.display();
+    //oldList.display();
+    //newList.display();
 }
 
 
@@ -171,7 +194,7 @@ void Apriori<T>::displayEverthing()
 doesn't check for doob's but i don't think it needs to
 */
 template <class T>
-void Apriori<T>::makeSets(LinkedList oldList, LinkedList newList)
+void Apriori<T>::makeSets() //uses the new and old linked list
 {
     //copy newList to oldLink to free up newList for the new sets with overloaded operator
     oldList = newList;
@@ -213,12 +236,12 @@ void Apriori<T>::makeSets(LinkedList oldList, LinkedList newList)
 
 //adds data to the new node
 template <class T>
-Node<T> Apriori<T>::makeNewNode(Node<T>* temp1, Node<T>* temp2)
+Node<T>* Apriori<T>::makeNewNode(Node<T>* temp1, Node<T>* temp2)
 {
    Node<T>* newNode = new Node<T>;
-   newNode->mSize = size + 1;
+   newNode->mSize = newNode->size + 1;
 
-   for(int i = 0; i < size; i++)
+   for(int i = 0; i < temp1->mSize; i++)
    {
       newNode->mData[i] = temp1->mData[i];
    }
@@ -244,7 +267,7 @@ bool Apriori<T>::isSame(Node<T>* temp1, Node<T>* temp2)
 template <class T>
 void Apriori<T>::setFrequencyThreshold(float percentage)
 {
-    mFrequencyThreshold = (startingData.mCount * percentage) / 100;
+    mFrequencyThreshold = (mCountTransactions * percentage) / 100;
 }
 template <class T>
 void Apriori<T>::prune()
@@ -252,6 +275,10 @@ void Apriori<T>::prune()
     
     
 }
-
+template <class T>
+void Apriori<T>::setCountTransactions(int count)
+{
+    mCountTransactions = count;
+}
 
 #endif
