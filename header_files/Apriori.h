@@ -142,6 +142,10 @@ void Apriori::findMinFrequ()
     
 }
 */
+
+/*
+have not tested with search works
+*/
 template <typename T>
 void Apriori<T>::cFirstCandList()
 {
@@ -173,7 +177,7 @@ void Apriori<T>::displayEverthing()
 
 //adds new nodes to new list
 /*
-doesn't check for doob's but i don't think it needs to
+doesn't check for doub's but i don't think it needs to
 */
 template <class T>
 void Apriori<T>::makeSets() //uses the new and old linked list
@@ -251,16 +255,51 @@ void Apriori<T>::setFrequencyThreshold(float percentage)
 {
     mFrequencyThreshold = (mCountTransactions * percentage) / 100;
 }
-template <class T>
-void Apriori<T>::prune()
-{
-    
-    
-}
+  
 template <class T>
 void Apriori<T>::setCountTransactions(int count)
 {
     mCountTransactions = count;
 }
+template <class T>
+void Apriori<T>::prune()
+{
+	Node<T>* currNode = newList.getHead();
+	Node<T>* lastNode;  //previous node
+	while(currNode != NULL)
+	{
+    	for(int i = 0; i < oldList.getCount(); i++)
+    	{
+    		for(int j = 0; j < currNode->mSize; j++)
+    		{
+				T* subset = new T[currNode->mSize - 1];  //one less than current node's size
+				for(int k = 0; k < currNode->mSize - 1; k++)
+				{
+					if(k < j)
+					{
+						subset[k] = currNode->mData[k];
+					}				
+                        if(k > j)
+					{
+						subset[k] = currNode->mData[k + 1];
+					}
+				} //end of for K < currNode->size
+				Node<T>* subsetNode = new Node<T>(subset->mSize,subset);
+				if(!oldList.searchForNode(currNode->mSize - 1, subsetNode)) //checkListForNode?
+				{
+					Node<T>* tmp = currNode;
+					currNode = currNode->mNext;
+					if(i == 0) newList.setHead(currNode);
+					else lastNode->mNext = currNode;
+					delete tmp;
+			    }
+			    delete subsetNode;
+    		} // end of for J < CurrNode->mSize
+    	} //end of I < old.mCount
+    	lastNode = currNode;
+    	currNode = currNode->mNext;;
+	}//end of the while(cNode != NULL)
+}
+
 
 #endif

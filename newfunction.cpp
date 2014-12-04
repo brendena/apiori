@@ -62,40 +62,40 @@ bool isSame(Node<T>* temp1, Node<T>* temp2)
    return theSame;
 }
 
-void AssList::prune(AssList oldList)
+void Apriori::prune()
 {
-	Node* currNode = mHead;
-	Node* lastNode;
+	Node<T>* currNode = newList.getHead();
+	Node<T>* lastNode; //prevouse node
 	while(currNode != NULL)
 	{
-	for(int i = 0; i < oldList.mCount; i++)
-	{
-			for(int j = 0; j < mSize; j++)
-			{
-				T* subset = new T[mSize - 1];
-				for(int k = 0; k < mSize - 1; k++)
-				{
-					if(k < j)
-					{
-						subset[k] = currNode->mSet[k];
-					}				
-                        if(k > j)
-					{
-						subset[k] = currNode->mSet[k + 1];
-					}
-				}
-				Node* subsetNode = new Node(subset);
-				if(!oldList.checkListForNode(subsetNode))
-				{
-					Node* tmp = currNode;
-					currNode = currNode.mNext;
-					if(i == 0) mHead = currNode;
-					else lastNode.mNext = currNode;
-					delete tmp;
-			}
-		}
-	}
-	lastNode = currNode;
-	currNode = currNode->mNext;;
+   	for(int i = 0; i < oldList.mCount; i++)
+   	{
+   			for(int j = 0; j < currNode->mSize; j++)
+   			{
+   				T* subset = new T[mSize - 1];  //one less of currNode
+   				for(int k = 0; k < mSize - 1; k++)
+   				{
+   					if(k < j)
+   					{
+   						subset[k] = currNode->mSet[k];
+   					}				
+                           if(k > j)
+   					{
+   						subset[k] = currNode->mSet[k + 1];
+   					}
+   				}
+   				Node* subsetNode = new Node(subset);
+   				if(!oldList.checkListForNode(subsetNode))
+   				{
+   					Node* tmp = currNode;
+   					currNode = currNode.mNext;
+   					if(i == 0) mHead = currNode;
+   					else lastNode.mNext = currNode;
+   					delete tmp;
+   			}
+   		}
+   	}
+   	lastNode = currNode;
+   	currNode = currNode->mNext;;
 	}
 }

@@ -8,19 +8,23 @@ using namespace std;
 template <typename T>
 struct Node
 {
+//data
    T*  mData; //going to a thing
    int mSize;  // no aaaaaaaaaaaaaaaaaaa
-   
    Node<T> *mNext;
-
+//functions
+   bool shittyOperatorComparison(Node<T>* right);
+//constructors and de
    Node();
    Node(int size);
    Node(int size, T data);
+   Node(int size, T* data);
+   ~Node();
    
    //template <typename T>
    //friend bool operator<T>==(Node<T>& left, Node<T>& right); compare mData with other mData
-   bool shittyOperatorComparison(Node<T>* right);
-   ~Node();
+
+
 };
 
 template <typename T>
@@ -51,16 +55,13 @@ Node<T>::Node(int size, T value)
     mData[0] = value;
     mNext = NULL;
 }
-/*
 template <typename T>
-Node<T>::Node(T size, T* value)
+Node<T>::Node(int size, T* value) //going to point  the same information
 {
-    for(int i = 0; i <= size; i++)
-    {
-        
-    }
+    mData = value;
+    mSize = size;
 }
-*/
+
 /*
 template <typename T>
 bool operator==(Node<T>& left, Node<T>& right)
@@ -68,7 +69,7 @@ bool operator==(Node<T>& left, Node<T>& right)
 }
 */
 template <typename T>
-bool Node<T>::shittyOperatorComparison(Node<T>* right)
+bool Node<T>::shittyOperatorComparison(Node<T>* right) //if there exactly the same
 {
     for(int i = 0; i < mSize; i++)
     {

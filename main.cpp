@@ -16,6 +16,7 @@ int main()
     test.setFrequencyThreshold(precentage[percentageNum]);
 
     test.cFirstCandList();
+    test.prune();
     test.displayEverthing();
     cout << "\n\nprogram ended fixed \n\n";
     return 0;

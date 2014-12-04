@@ -23,11 +23,13 @@ class LinkedList
     	int  getCount();  //works
     	T    getData(int index);
     	Node<T>* getHead(){ return mHead;};
+  
     	
     //setters
     	void setData(int index, T data);
 		void createArray(int size);
     	void setArrayData(int index, int data);
+    	void setHead(Node<T>* joe);
     	
  	//utilities
     	void clear();
@@ -35,14 +37,17 @@ class LinkedList
     	bool isEmpty();
     	bool dealWithAddingValuesToBeginning(Node<T>* value);
     	void appendToTheEnd(Node<T>* value);
-    	bool search(int value);
+    	bool search(T value);
     	void print();
+    	bool searchForNode(Node<T>*  bob);
+
+    	
     //dealing with iterator
     	void clearIterator();
 		int getIteratorSize();
 		T* getIteratorValue();
 		
-    //operttor//constructors
+    //operator//constructors
     	T operator[](int index);
     	bool operator++(int value); /************ added the int value and it compiled May not work *********************/
     	
@@ -251,9 +256,13 @@ void LinkedList<T>::appendToTheEnd(Node<T>* value)
 		mTail = mTail->mNext;
 	}
 }
-
+/*
+Pre: search for a item in the linkedList
+Post: return true if found
+Purpose: find if the items was added to the newList first go
+*/
 template <class T>
-bool LinkedList<T>::search(int value)
+bool LinkedList<T>::search(T value)
 {
 	Node<T>* ptr = mHead;
 
@@ -271,6 +280,20 @@ bool LinkedList<T>::search(int value)
 	return false;
 }
 
+template <typename T>
+bool LinkedList<T>::searchForNode(Node<T>* keyNode)
+{
+	Node<T>* currNode = mHead;
+	for(int i = 0; i < mCount; i++)
+	{
+		if(currNode->shittyOperatorComparison(keyNode))
+		{
+			return true;
+		}
+		currNode = currNode->mNext;
+	}
+	return false;
+}
 
 template <class T>
 void LinkedList<T>::display()
