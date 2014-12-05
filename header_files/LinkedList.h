@@ -38,7 +38,7 @@ class LinkedList
     	bool dealWithAddingValuesToBeginning(Node<T>* value);
     	void appendToTheEnd(Node<T>* value);
     	bool search(T value);
-    	void print();
+    	void print(string fileName);
     	bool searchForNode(Node<T>*  bob);
 		void deleteByIndex(int index);
     	
@@ -286,7 +286,7 @@ bool LinkedList<T>::searchForNode(Node<T>* keyNode)
 	Node<T>* currNode = mHead;
 	for(int i = 0; i < mCount; i++)
 	{
-		if(currNode->shittyOperatorComparison(keyNode))
+		if(currNode->fantasticOperatorComparison(keyNode))
 		{
 			return true;
 		}
@@ -329,10 +329,10 @@ don't we want the frequency count when we print out
 leave a extra \n at the end of the print output.txt
 */
 template <class T>
-void LinkedList<T>::print()
+void LinkedList<T>::print(string fileName)
 {
 	ofstream myfile;
-	myfile.open (mHead.mCount + "output.txt");
+	myfile.open (fileName, ios::app); //mHead.mCount + 
 	Node<T>* ptr = mHead;
 	while(ptr != NULL)
 	{
@@ -341,16 +341,18 @@ void LinkedList<T>::print()
 		{
 			myfile << "  " << ptr->mData[i];
 		}
-		myfile << "\n";
+		myfile << "\n\n\n\n";
 		ptr = ptr->mNext;
 	}
 	
 }
+/*
+if you setHead to NULL and then clear, you set all the values to 0 or NULL
+*/
 template <class T>
 void LinkedList<T>::setHead(Node<T>* joe)
 {
 	mHead = joe;
-	
 }
 
 template <class T>
@@ -365,6 +367,7 @@ void LinkedList<T>::deleteByIndex(int index)
 	{
 		delete mHead;
 		mHead = NULL;
+		mCount--;
 	}
 	else if(index == 0)
 	{
@@ -376,7 +379,7 @@ void LinkedList<T>::deleteByIndex(int index)
 	else
 	{
 		ptr = mHead;
-		for(int i = 0; i < index - 1; i++) //interate through until element before index
+		for(int i = 0; i < index - 1; i++) //iterate through until element before index
 		{
 			ptr = ptr->mNext;
 		}

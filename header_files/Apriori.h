@@ -32,7 +32,7 @@ class Apriori
         
         Node<T>* makeNewNode(Node<T>* temp1, Node<T>* temp2);
         bool isSame(Node<T>* temp1, Node<T>* temp2);
-    //end of make new Sets??????!??!!?!?!?!?!?!?!?!
+    //end of make new sets
     public:
     //for the first time
         void cFirstCandList(); //create first candidate list
@@ -50,10 +50,11 @@ class Apriori
         
     //utilites
         void prune();
-		bool checkForItemsFrequency(Node<T>* set);// if its larger then frequency threshold its good
+		bool checkForItemsFrequency(Node<T>* set);// if it's larger than frequency threshold it's good
 		void displayEverthing();
-		void print();
+		void print(string fileName);
 		void makeSets();
+		void clearAll();
 	//constructors
 		Apriori();
 		Apriori(int frequencyThreshold);
@@ -78,7 +79,7 @@ Apriori<T>::Apriori(int frequencyThreshold)
 }
 
 /*
-it shoots one to many
+it shoots one too many
 */
 template <typename T>
 void Apriori<T>::fillStartingData(string file)
@@ -91,7 +92,7 @@ void Apriori<T>::fillStartingData(string file)
   
     while(numberOfTransactions <= mCountTransactions && !inputFile.eof() && itemsInTransactions != -1)
     {
-        startingPosition = inputFile.tellg(); //tellg get the position of the file input
+        startingPosition = inputFile.tellg(); //tellg gets the position of the file input
         itemsInTransactions = getDataFileCount(inputFile);
         if(itemsInTransactions == - 1){ // error saying didn't take in any numbers
     		cout << "error error \n"
@@ -107,7 +108,7 @@ void Apriori<T>::fillStartingData(string file)
             string input;
             for(int i = 0; i < itemsInTransactions; i++)
             {
-    			inputFile >> junk; //gettint the transactional number
+    			inputFile >> junk; //getting the transactional number
     			inputFile.get(); //getting the space
     			inputFile >> input; //gets the input number
 			    inputFile.get();// gets the newline character
@@ -143,15 +144,11 @@ int Apriori<T>::getDataFileCount(ifstream& inputFile)
         {
             count++; // it add plus plus for the item before this
             getline(inputFile, getLineString);
-        }while(transactionNumber == getLineString[0]); //so ifthe transaction number don't match
+        }while(transactionNumber == getLineString[0]); //so if the transaction number doesn't match
     }
     return count;
 }
 
-
-/*
-have not tested with search works
-*/
 template <typename T>
 void Apriori<T>::cFirstCandList()
 {
@@ -161,7 +158,7 @@ void Apriori<T>::cFirstCandList()
         T* data = startingData.getIteratorValue();
         for(int i = 0; i < startingData.getIteratorSize(); i++)
         {
-            if(!newList.search(data[i])) //not found
+            if(!newList.search(data[i]))
             {
                 Node<T>* newNode = new Node<T>(1, data[i]);
                 newList.appendToTheEnd(newNode);
@@ -181,14 +178,14 @@ void Apriori<T>::displayEverthing()
 
 //adds new nodes to new list
 /*
-doesn't check for doub's but i don't think it needs to
+doesn't check for doubles but i don't think it needs to
 */
 template <class T>
 void Apriori<T>::makeSets() //uses the new and old linked list
 {
     oldList.operatorEquals(newList);
     newList.setHead(NULL);
-    newList.clear(); //mcount = 0;
+    newList.clear(); //mCount = 0;
 
     int setCount; // one after the node your on
     int nodeCount = 0; //keeps track of node your on
@@ -226,7 +223,7 @@ Node<T>* Apriori<T>::makeNewNode(Node<T>* temp1, Node<T>* temp2)
       newNode->mData[i] = temp1->mData[i];
    }
    newNode->mData[newNode->mSize - 1] = temp2->mData[temp2->mSize - 1];
-   return newNode; //just added
+   return newNode;
 }
 
 //checks to see if all elements in sets are the same except for last element
@@ -258,7 +255,7 @@ void Apriori<T>::setCountTransactions(int count)
     mCountTransactions = count;
 }
 
-//check if subsets in set exist 
+//check if subsets in set exist     //// AJ places his flag in this function and claims it for himself!
 template <class T>
 void Apriori<T>::prune()
 {
@@ -268,7 +265,7 @@ void Apriori<T>::prune()
 	{
     	for(int i = 0; i < oldList.getCount(); i++)
     	{
-    		for(int j = 0; j < currNode->mSize; j++)// this bunch of code create all possible combinations.
+    		for(int j = 0; j < currNode->mSize; j++)// this bunch of code creates all possible combinations.
     		{
 				T* subset = new T[currNode->mSize - 1];  //one less than current node's size
 				for(int k = 0; k < currNode->mSize; k++)
@@ -283,7 +280,7 @@ void Apriori<T>::prune()
 					}
 				} //end of for K < currNode->size
 				Node<T>* subsetNode = new Node<T>(currNode->mSize - 1,subset, 0);
-				if(!oldList.searchForNode(subsetNode)) //checkListForNode?
+				if(!oldList.searchForNode(subsetNode))
 				{
 				    if(i != 0)
 				    {
@@ -311,14 +308,14 @@ void Apriori<T>::prune()
 	}//end of the while(cNode != NULL)
 }
 
-//takes out non frequent sets
+//takes out infrequent sets
 template <class T>
 void Apriori<T>::purge()
 {
     Node<T>* currNode = newList.getHead();
     for(int i = 0; currNode != NULL; i++ )
     {
-        if(!checkForItemsFrequency(currNode)) // if it doesn't meet the minume frequency then delete
+        if(!checkForItemsFrequency(currNode)) // if it doesn't meet the minimum frequency then delete
         {
             newList.deleteByIndex(i);
             i--;
@@ -353,7 +350,7 @@ bool Apriori<T>::checkForItemsFrequency(Node<T>* set)
                 }
             }
             if(!found) break;
-            if(i == set->mSize - 1) count++; //so if it found it for all of mSize then all the values been found
+            if(i == set->mSize - 1) count++; //so if it found it for all of mSize, then all the values have been found
         }
     }while(startingData++);
     
@@ -367,8 +364,18 @@ bool Apriori<T>::checkForItemsFrequency(Node<T>* set)
     }
 }
 template <class T>
-void Apriori<T>::print()
+void Apriori<T>::print(string fileName)
 {
-    newList.print();
+    newList.print(fileName);
+}
+
+template <class T>
+void Apriori<T>::clearAll()
+{
+    newList.clear();
+    startingData.clear();
+    oldList.clear();
+    mCountTransactions = 0;
+    mFrequencyThreshold = 0;
 }
 #endif

@@ -9,22 +9,17 @@ template <typename T>
 struct Node
 {
 //data
-   T*  mData; //going to a thing
-   int mSize;  // no aaaaaaaaaaaaaaaaaaa
+   T*  mData;
+   int mSize;
    Node<T> *mNext;
 //functions
-   bool shittyOperatorComparison(Node<T>* right);
-//constructors and de
+   bool fantasticOperatorComparison(Node<T>* right);
+//constructors and destructors
    Node();
    Node(int size);
    Node(int size, T data);
    Node(int size, T* data, int ass);
    ~Node();
-   
-   //template <typename T>
-   //friend bool operator<T>==(Node<T>& left, Node<T>& right); compare mData with other mData
-
-
 };
 
 template <typename T>
@@ -57,20 +52,14 @@ Node<T>::Node(int size, T value)
     mNext = NULL;
 }
 template <typename T>
-Node<T>::Node(int size, T* value, int ass) //going to point  the same information
+Node<T>::Node(int size, T* value, int ass)
 {
     mData = value;
     mSize = size;
 }
 
-/*
 template <typename T>
-bool operator==(Node<T>& left, Node<T>& right)
-{
-}
-*/
-template <typename T>
-bool Node<T>::shittyOperatorComparison(Node<T>* right) //if there exactly the same
+bool Node<T>::fantasticOperatorComparison(Node<T>* right)
 {
     for(int i = 0; i < mSize; i++)
     {
