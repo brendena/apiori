@@ -4,7 +4,7 @@ At the command-line enter: executable_filename
 lit -ascii 
 -ntrans XX Number of transactions
 -tlen YY  T for average transaction
--nitems ZZ //total number of transactions
+-nitems ZZ // number of items
 XX x 1000 transactions will be produced involving YY average number of items per transaction, 
 drawn from ZZ x 1000 total number of items. 
 

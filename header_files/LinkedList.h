@@ -319,7 +319,6 @@ template <class T>
 void LinkedList<T>::operatorEquals(LinkedList<T>& other)
 {
 	clear();
-	cout << "sdfsd";
 	mHead = other.getHead();
 	mCount = other.getCount();
 }
@@ -333,11 +332,11 @@ template <class T>
 void LinkedList<T>::print()
 {
 	ofstream myfile;
-	myfile.open ("output.txt");
+	myfile.open (mHead.mCount + "output.txt");
 	Node<T>* ptr = mHead;
 	while(ptr != NULL)
 	{
-		myfile << ptr->mData[0]; //put here so there not a unwanted " " if there no data there
+		myfile << ptr->mData[0];
 		for(int i = 1; i < ptr->mSize; i++)
 		{
 			myfile << "  " << ptr->mData[i];

@@ -17,13 +17,27 @@ int main()
     test.fillStartingData("testdata.txt");  
     test.setFrequencyThreshold(percentage[percentageNum]);
     test.cFirstCandList();
-    
-    test.firstPrune();
-    //test.displayEverthing();
+    test.purge();
     test.print();
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
     test.makeSets();
-    test.displayEverthing();
+    test.purge();
+    while(test.getCount() > 0)
+    {
+        test.makeSets();
+        test.prune();
+        test.purge();
+        test.print();
+    }
     //after her we can start looping throught he possibilities
     cout << "\n\nprogram ended fixed \n\n";
     

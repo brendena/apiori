@@ -1,8 +1,6 @@
 /*
 Error log
-
-So currently there a problem with getDataFileCount it doens't get the last line of data.  It someithng with testing for the -1 part
-
+good
 */
 
 #ifndef APRIORI
@@ -34,13 +32,15 @@ class Apriori
         
         Node<T>* makeNewNode(Node<T>* temp1, Node<T>* temp2);
         bool isSame(Node<T>* temp1, Node<T>* temp2);
-    //end of make new Ste
+    //end of make new Sets??????!??!!?!?!?!?!?!?!?!
     public:
     //for the first time
         void cFirstCandList(); //create first candidate list
         void fillStartingData(string file);
-        void firstPrune();
         
+    //magic
+        void purge();
+        int getCount(){return newList.getCount();};
         
         
         
@@ -111,13 +111,11 @@ void Apriori<T>::fillStartingData(string file)
     			inputFile.get(); //getting the space
     			inputFile >> input; //gets the input number
 			    inputFile.get();// gets the newline character
-                //cout << endl << input << " " << i << "  \n";
     			startingData.setArrayData(i,stoi(input));
 	        }
     	}
     numberOfTransactions++;
     }
-    cout << "\n its done \n";
     inputFile.close();
 }
 
@@ -206,21 +204,15 @@ void Apriori<T>::makeSets() //uses the new and old linked list
         while(setCount < oldList.getCount()) 
         {
             temp2 = temp2->mNext;
-            cout << "also went through" << endl;
             if(isSame(temp1, temp2))  //check to see if compatible
             {
-                cout << "goes through" << endl;
                 newList.appendToTheEnd(makeNewNode(temp1, temp2));
-                cout << "potato\n";
             }
-            cout << setCount;
             setCount++;
         }
-        cout << "Ddf";
         nodeCount++;
         temp1 = temp1->mNext;
    }
-   cout << "all good bye\n\n";
 }
 
 //adds data to the new node
@@ -252,17 +244,21 @@ bool Apriori<T>::isSame(Node<T>* temp1, Node<T>* temp2)
    return theSame;
 }
 
+//makes threshold frequency
 template <class T>
 void Apriori<T>::setFrequencyThreshold(float percentage)
 {
     mFrequencyThreshold = (mCountTransactions * percentage) / 100;
 }
-  
+
+//sets transaction count
 template <class T>
 void Apriori<T>::setCountTransactions(int count)
 {
     mCountTransactions = count;
 }
+
+//check if subsets in set exist 
 template <class T>
 void Apriori<T>::prune()
 {
@@ -315,15 +311,15 @@ void Apriori<T>::prune()
 	}//end of the while(cNode != NULL)
 }
 
+//takes out non frequent sets
 template <class T>
-void Apriori<T>::firstPrune()
+void Apriori<T>::purge()
 {
     Node<T>* currNode = newList.getHead();
     for(int i = 0; currNode != NULL; i++ )
     {
         if(!checkForItemsFrequency(currNode)) // if it doesn't meet the minume frequency then delete
         {
-            cout <<"\nthis i " << i<< "  currNode\n " << currNode->mData[0] << endl;
             newList.deleteByIndex(i);
             i--;
         }
@@ -373,7 +369,6 @@ bool Apriori<T>::checkForItemsFrequency(Node<T>* set)
 template <class T>
 void Apriori<T>::print()
 {
-    cout << "we are printing stuff\n";
     newList.print();
 }
 #endif
