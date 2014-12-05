@@ -51,7 +51,7 @@ class LinkedList
     	T operator[](int index);
     	bool operator++(int value); /************ added the int value and it compiled May not work *********************/
     	
-    	LinkedList<T> operator=(LinkedList<T> other);
+    	void operatorEquals(LinkedList<T>& other);
     	
     	LinkedList();
     	~LinkedList();
@@ -114,20 +114,21 @@ void LinkedList<T>::setData(int index, T data)  ///doesn't work
 
 
 template <class T>
-void LinkedList<T>::clear()  //doesn't work
+void LinkedList<T>::clear()  
 {
-	Node<T> *nodePtr = mHead;
-	while(nodePtr != NULL)
+	if(mHead != NULL)
 	{
-	  //garbage keeps track of node to be deleted
-	  Node<T> *garbage = nodePtr;
-	  //move on to the next node, if any
-	  nodePtr = nodePtr->mNext;
-	  delete garbage;
+		Node<T> *nodePtr = mHead;
+		Node<T> *garbage;
+		while(nodePtr != NULL)
+		{
+		  //garbage keeps track of node to be deleted
+		  garbage = nodePtr;
+		  //move on to the next node, if any
+		  nodePtr = nodePtr->mNext;
+		  delete garbage;
+		}
 	}
-	
-	delete mHead;
-	delete mTail;
 	mHead = mTail = NULL;
 	mCount = 0;
 }
@@ -298,7 +299,6 @@ template <class T>
 void LinkedList<T>::display()
 {
 	Node<T>* ptr = mHead;
-	int sizeArray;
 	cout << "\ndisplay\n";
 	for (int i = 0; ptr != NULL; i++)
 	{
@@ -316,13 +316,13 @@ post:
 purpose: to copy the linked list to another array
 */
 template <class T>
-LinkedList<T> LinkedList<T>::operator=(LinkedList other)
+void LinkedList<T>::operatorEquals(LinkedList<T>& other)
 {
 	clear();
-	
+	cout << "sdfsd";
 	mHead = other.getHead();
+	mCount = other.getCount();
 }
-
 
 /*
 don't we want the frequency count when we print out
@@ -360,7 +360,12 @@ void LinkedList<T>::deleteByIndex(int index)
 	Node<T>* ptr;
 	if(index >= mCount) //index greater then count
 	{
-		cout << "when't over bounds\n";	
+		cout << "went over bounds\n";
+	}
+	else if(mHead->mNext == NULL && index == 0)
+	{
+		delete mHead;
+		mHead = NULL;
 	}
 	else if(index == 0)
 	{

@@ -188,54 +188,55 @@ doesn't check for doub's but i don't think it needs to
 template <class T>
 void Apriori<T>::makeSets() //uses the new and old linked list
 {
-    //copy newList to oldLink to free up newList for the new sets with overloaded operator
-    oldList = newList;
-    //clear newList
-    newList.clear();
-    
+    oldList.operatorEquals(newList);
+    newList.setHead(NULL);
+    newList.clear(); //mcount = 0;
+    oldList.display();
+
     int setCount; // one after the node your on
     int nodeCount = 0; //keeps track of node your on
     Node<T>* temp1 = oldList.getHead();
     Node<T>* temp2 = temp1;
-   
+    
    //sets starting node and proceeding node to start traversal
    while(temp2->mNext != NULL)
    {
         temp2 = temp1->mNext;
         setCount = nodeCount;
         //compares one node with all other nodes
-        while(setCount != oldList.getCount())
+        cout <<"old list count" <<oldList.getCount() << endl;
+        while(setCount < oldList.getCount()) 
         {
+            cout << "also went through" << endl;
             if(isSame(temp1, temp2))  //check to see if compatible
             {
-                if(newList.getHead() == NULL)
-                    newList.setHead(makeNewNode(temp1, temp2));
-                else
-                {
-                    newList.appendToTheEnd(makeNewNode(temp1, temp2));
-                }
+                cout << "goes through" << endl;
+                newList.appendToTheEnd(makeNewNode(temp1, temp2));
+                cout << "potato\n";
             }
             setCount++;
+            cout << setCount;
             temp2 = temp2->mNext;
         }
+        cout << "Ddf";
         nodeCount++;
         temp1 = temp1->mNext;
    }
+   cout << "all good bye\n\n";
 }
 
 //adds data to the new node
 template <class T>
 Node<T>* Apriori<T>::makeNewNode(Node<T>* temp1, Node<T>* temp2)
 {
-   Node<T>* newNode = new Node<T>;
-   newNode->mSize = newNode->mSize + 1;
+   Node<T>* newNode = new Node<T>(temp1->mSize + 1);
 
    for(int i = 0; i < temp1->mSize; i++)
    {
       newNode->mData[i] = temp1->mData[i];
    }
    newNode->mData[newNode->mSize - 1] = temp2->mData[temp2->mSize - 1];
-   
+   return newNode; //just added
 }
 
 //checks to see if all elements in sets are the same except for last element
@@ -268,39 +269,51 @@ template <class T>
 void Apriori<T>::prune()
 {
 	Node<T>* currNode = newList.getHead();
-	Node<T>* lastNode;  //previous node
+	Node<T>* lastNode = NULL;  //previous node
 	while(currNode != NULL)
 	{
     	for(int i = 0; i < oldList.getCount(); i++)
     	{
-    		for(int j = 0; j < currNode->mSize; j++)
+    		for(int j = 0; j < currNode->mSize; j++)// this bunch of code create all possible combinations.
     		{
 				T* subset = new T[currNode->mSize - 1];  //one less than current node's size
-				for(int k = 0; k < currNode->mSize - 1; k++)
+				for(int k = 0; k < currNode->mSize; k++)
 				{
 					if(k < j)
 					{
 						subset[k] = currNode->mData[k];
 					}				
-                        if(k > j)
+                    if(k > j)
 					{
-						subset[k] = currNode->mData[k + 1];
+						subset[k-1] = currNode->mData[k];
 					}
 				} //end of for K < currNode->size
 				Node<T>* subsetNode = new Node<T>(currNode->mSize - 1,subset, 0);
 				if(!oldList.searchForNode(subsetNode)) //checkListForNode?
 				{
-					Node<T>* tmp = currNode;
-					currNode = currNode->mNext;
-					if(i == 0) newList.setHead(currNode);
-					else lastNode->mNext = currNode;
-					delete tmp;
+				    if(i != 0)
+				    {
+    					currNode = lastNode;
+				    }
+				    else
+				    {
+				        currNode = NULL;
+				    }
+                    newList.deleteByIndex(i);
+    			    i--;
 			    }
 			    delete subsetNode;
     		} // end of for J < CurrNode->mSize
     	} //end of I < old.mCount
-    	lastNode = currNode;
-    	currNode = currNode->mNext;
+    	if(currNode == NULL)
+    	{
+    	    currNode = newList.getHead();
+    	}
+    	else
+    	{
+            lastNode = currNode;
+    	    currNode = currNode->mNext;
+    	}
 	}//end of the while(cNode != NULL)
 }
 
@@ -308,7 +321,6 @@ template <class T>
 void Apriori<T>::firstPrune()
 {
     Node<T>* currNode = newList.getHead();
-	Node<T>* lastNode;  //previous node
     for(int i = 0; currNode != NULL; i++ )
     {
         if(!checkForItemsFrequency(currNode)) // if it doesn't meet the minume frequency then delete
@@ -363,6 +375,7 @@ bool Apriori<T>::checkForItemsFrequency(Node<T>* set)
 template <class T>
 void Apriori<T>::print()
 {
+    cout << "we are printing stuff\n";
     newList.print();
 }
 #endif
