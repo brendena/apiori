@@ -191,7 +191,6 @@ void Apriori<T>::makeSets() //uses the new and old linked list
     oldList.operatorEquals(newList);
     newList.setHead(NULL);
     newList.clear(); //mcount = 0;
-    oldList.display();
 
     int setCount; // one after the node your on
     int nodeCount = 0; //keeps track of node your on
@@ -199,14 +198,14 @@ void Apriori<T>::makeSets() //uses the new and old linked list
     Node<T>* temp2 = temp1;
     
    //sets starting node and proceeding node to start traversal
-   while(temp2->mNext != NULL)
+   while(temp1->mNext != NULL)
    {
-        temp2 = temp1->mNext;
-        setCount = nodeCount;
+        temp2 = temp1;
+        setCount = nodeCount + 1;
         //compares one node with all other nodes
-        cout <<"old list count" <<oldList.getCount() << endl;
         while(setCount < oldList.getCount()) 
         {
+            temp2 = temp2->mNext;
             cout << "also went through" << endl;
             if(isSame(temp1, temp2))  //check to see if compatible
             {
@@ -214,9 +213,8 @@ void Apriori<T>::makeSets() //uses the new and old linked list
                 newList.appendToTheEnd(makeNewNode(temp1, temp2));
                 cout << "potato\n";
             }
-            setCount++;
             cout << setCount;
-            temp2 = temp2->mNext;
+            setCount++;
         }
         cout << "Ddf";
         nodeCount++;
