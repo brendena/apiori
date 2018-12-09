@@ -11,4 +11,4 @@ our git repository
 https://github.com/cerebralasylum/apiori
 
 git cheat sheet
-https://rawgit.com/pastjean/git-cheat-sheet/master/git-cheat-sheet.svg
+https://cdn.jsdelivr.net/gh/pastjean/git-cheat-sheet@master/git-cheat-sheet.svg
